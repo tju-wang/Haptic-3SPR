@@ -9,6 +9,9 @@ code for STM32H743ZI
 $		discover
 #		data record 
 
+7.9
+0.使用git控制版本迭代  此处log与git log 均可作为改动参考
+
 
 5.11
 0.解决5.8 *1 的计算问题 原因是  用arm_cos_f32替换 cos后 没有引入#include"arm_math.h"头文件！  编译器有警告，调用未定义函数
