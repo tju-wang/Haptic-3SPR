@@ -1,0 +1,15 @@
+.\haptic2018.11.29\solvefbi.o: ..\Kinematic\solveFbi.c
+.\haptic2018.11.29\solvefbi.o: ..\Kinematic\solveFbi.h
+.\haptic2018.11.29\solvefbi.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\haptic2018.11.29\solvefbi.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+.\haptic2018.11.29\solvefbi.o: ..\Kinematic\kinematic.h
+.\haptic2018.11.29\solvefbi.o: C:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\DSP\Include\arm_math.h
+.\haptic2018.11.29\solvefbi.o: C:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_compiler.h
+.\haptic2018.11.29\solvefbi.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\haptic2018.11.29\solvefbi.o: C:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_armcc.h
+.\haptic2018.11.29\solvefbi.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\haptic2018.11.29\solvefbi.o: ..\Kinematic\matrixlib.h
+.\haptic2018.11.29\solvefbi.o: ..\Kinematic\matrixadvlib.h
+.\haptic2018.11.29\solvefbi.o: ..\Kinematic\solveCoord.h
+.\haptic2018.11.29\solvefbi.o: ..\Kinematic\my_matrixadvlib.h
+.\haptic2018.11.29\solvefbi.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h

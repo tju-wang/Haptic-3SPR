@@ -228,7 +228,7 @@ int main(void)
 	
 //	KinematicTest();
 	
-  unsigned int numm,kk;
+	unsigned int numm,kk;
 //  for(numm=0;numm<20;numm++)
 //	{
 //		HAL_GPIO_WritePin(LD2_GPIO_Port,LD2_Pin,GPIO_PIN_SET);
@@ -415,7 +415,7 @@ void KinematicTest()
 	while(1);
 }
 
-void Kinematic()
+void Kinematic(void)
 {
 	char Status = 0;
 	CalcOverFlag = 0;

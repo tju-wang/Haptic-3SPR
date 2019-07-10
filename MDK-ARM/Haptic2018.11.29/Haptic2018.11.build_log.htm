@@ -1,0 +1,71 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: ¦ÌVision V5.27.1.0
+Copyright (C) 2019 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: Tju Dell_tju, Tju, LIC=FQQQD-8JFG3-BXFUY-IS7T3-V3YT4-HSMSG
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Professional  Version: 5.27.1.0
+Toolchain Path:  C:\Keil_v5\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.06 update 6 (build 750)
+Assembler:       Armasm.exe V5.06 update 6 (build 750)
+Linker/Locator:  ArmLink.exe V5.06 update 6 (build 750)
+Library Manager: ArmAr.exe V5.06 update 6 (build 750)
+Hex Converter:   FromElf.exe V5.06 update 6 (build 750)
+CPU DLL:         SARMCM3.DLL V5.27.1.0
+Dialog DLL:      DCM.DLL V1.17.2.0
+Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.0.6.0
+Dialog DLL:      TCM.DLL V1.36.1.0
+ 
+<h2>Project:</h2>
+C:\Users\Dell_tju\Desktop\Haptic\Software\Haptic-3SPR\MDK-ARM\Haptic.uvprojx
+Project File Date:  07/09/2019
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 update 6 (build 750)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
+Build target 'Haptic'
+compiling main.c...
+../Src/main.c(202): warning:  #177-D: variable "FlashStatus"  was declared but never referenced
+  	 HAL_StatusTypeDef FlashStatus=HAL_OK;
+../Src/main.c(231): warning:  #177-D: variable "kk"  was declared but never referenced
+  	unsigned int numm,kk;
+../Src/main.c: 2 warnings, 0 errors
+linking...
+Program Size: Code=369112 RO-data=3068 RW-data=244 ZI-data=14676  
+FromELF: creating hex file...
+".\Haptic2018.11.29\Haptic2018.11.29" - 0 Error(s), 2 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                http://www.keil.com/pack/ARM.CMSIS.5.5.1.pack
+                ARM.CMSIS.5.5.1
+                CMSIS (Cortex Microcontroller Software Interface Standard)
+   * Component: CORE Version: 5.2.0
+   * Component: DSP Variant: Library Version: 1.6.0
+
+Package Vendor: Keil
+                http://www.keil.com/pack/Keil.STM32H7xx_DFP.2.2.0.pack
+                Keil.STM32H7xx_DFP.2.2.0
+                STMicroelectronics STM32H7 Series Device Support and Examples
+
+<h2>Collection of Component include folders:</h2>
+  .\RTE\_Haptic
+  C:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include
+  C:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\DSP\Include
+  C:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32H7xx_DFP\2.2.0\Drivers\CMSIS\Device\ST\STM32H7xx\Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE:5.2.0
+
+   * Component: ARM::CMSIS:DSP:Library:1.6.0
+      Library file:  CMSIS\DSP\Lib\ARM\arm_cortexM7lfdp_math.lib
+      Include file:  CMSIS\DSP\Include\arm_math.h
+Build Time Elapsed:  00:00:04
+</pre>
+</body>
+</html>

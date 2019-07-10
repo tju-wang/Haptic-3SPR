@@ -84,7 +84,7 @@ void EncoderClear(void);
 
 void CtrlStruct_Init(void);
 void KinematicTest(void);
-void Kinematic();
+void Kinematic(void);
 void CalcTest(void);
 
 char InputDataCheck(var_t *var_i,var_q *varq_i);
