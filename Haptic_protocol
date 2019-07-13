@@ -1,0 +1,69 @@
+Haptic 协议
+发送协议  11字节
+{  ID  Cmd  CmdData1  CmaData2  CmdData3   CmdData4  CmdData5  CmdData6  Check  }
+
+0x79  广播
+
+1.电机使能 失能
+Cmd   			0x10
+CmdData1   		0x11 使能  0x10失能
+
+2.电机PWM设置
+Cmd 			0x20
+ID 			1~3  表示电机ID  PWM_Value  = CmdData1*100+CmdData2;
+ID    		0x79 表示所有电机		PWM_Value1 = CmdData1*100+CmdData2;	 PWM_Value2 = 3*100+4  PWM_Value3 = 5*100+6	
+
+3.数据回读
+Cmd 			0x30
+Encoder_counter	= CmdData1*255+CmdData2     CmdData1 的最高位  表示符号   0为正 1为负
+回读格式
+//共16字节  
+{ Type	Data1 Data2  Data3 Data4 Data5 Data6 Data7 Data8 Data9  Free1  Free2  Free3 Check }
+
+Type  回读指令类型  用于自动回读
+0.编码器回读  FLASH回读  电机PWM回读   按键状态回读  当前模式（是否补偿、什么补偿）回读  	当前重力补偿电机力 
+Type 0x20		0x30		0x40																 0x60			
+编码器回读	
+EncoderCounter = Data1*65536+Data2*256+Data3   Data1 最高位表示数值正负  1负  0正	
+电机PWM回读
+
+
+4.控制模式 
+Cmd            0x40
+Cmddata1
+CTR_PUSHPULL		0x11  	//推拉模式
+
+不同力类型补偿开关
+Cmd            0x41    
+StaFriFlag			0x11	//静摩擦
+DynFriFlag			0x12	//动摩擦
+GraFlag				0x13	//重力补偿
+InerFlag			0x14	//惯性力补偿
+
+
+5.FLASH 固定参数相关
+Cmd  	0x50	修改FLASH
+Cmddata1 	FLASH  顺序    Value = 256*CmdData2 + CmdData3
+		0x10	FLASH回读
+
+		0x11	修改FLASH
+		0x13	FLASH重置
+
+		0x14	修改FLASH  Init的内容
+
+
+		
+/**********************************************电脑端结构解算部分协议*******************************/
+发送协议  14字节   下位机—>电脑
+{  ID  Cmd  CmdData1  CmaData2  CmdData3   CmdData4  CmdData5  CmdData6  Error  Free Sort Check  }
+Cmd = 0x10
+q1 = CmdData1*10 + CmdData2/10;
+
+
+接收协议  电脑->下位机  返回各杆的推力  分正负  15字节
+
+{  ID  Cmd  Data1_1  Data1_2  Data1_3  Data2_1  Data2_2  Data2_3  Data3_1  Data3_2  Data3_3  Sort Check  }
+F1 = Data_3/10 + Data_2*10 +Data_1*1000;     Data_1最高位  为 符号位  1为负数   0为正数
+Cmd = 0x11
+
+
