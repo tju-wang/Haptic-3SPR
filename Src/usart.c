@@ -58,6 +58,7 @@ unsigned char UartRxBuf = 0;
 
 static unsigned int upwm;
 
+extern var_t var;
 extern unsigned char Uart3Error;
 extern unsigned int gErrorStatus;
 extern Moter_t M1,M2,M3;
@@ -162,7 +163,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
     /* USART2 interrupt Init */
-    HAL_NVIC_SetPriority(USART2_IRQn, 2, 1);
+    HAL_NVIC_SetPriority(USART2_IRQn, 2, 2);
     HAL_NVIC_EnableIRQ(USART2_IRQn);
   /* USER CODE BEGIN USART2_MspInit 1 */
 
@@ -189,7 +190,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
     /* USART3 interrupt Init */
-    HAL_NVIC_SetPriority(USART3_IRQn, 3, 1);
+    HAL_NVIC_SetPriority(USART3_IRQn, 1, 1);
     HAL_NVIC_EnableIRQ(USART3_IRQn);
   /* USER CODE BEGIN USART3_MspInit 1 */
 
@@ -262,11 +263,11 @@ HAL_UART_Receive_IT(huart, (uint8_t *)RXBuffer, 1); //再打开中断接收
 	}
 }
 
-void USART3Interrupt(char UartRxBuf)
+void USART3Interrupt(char UartRxBuf)	//数据交换  上位机串口
 {
 static unsigned char i =0;	
 static unsigned int scheck = 0;
-	
+unsigned char Cmd = 0;	
 if(UartRxBuf=='}')	{
 	if(Uart3_counter==13) 	{
 		scheck = 0;
@@ -275,12 +276,22 @@ if(UartRxBuf=='}')	{
 		}
 		scheck = scheck%100;
 		if(scheck==Uart3RxData[12])	{
-			CalcMotorForce(&MotorForce.F1,Uart3RxData[2],Uart3RxData[3],Uart3RxData[4]);
-			CalcMotorForce(&MotorForce.F2,Uart3RxData[5],Uart3RxData[6],Uart3RxData[7]);
-			CalcMotorForce(&MotorForce.F3,Uart3RxData[8],Uart3RxData[9],Uart3RxData[10]);
-			//数据排序符合先后次序  且在10ms中断中  不断刷新  保证通讯成功
-			GriverFDBKCounter = Uart3RxData[11];
-			Uart3Error &= ~(Error_Uart3RX);
+			//暂留  上位机解算位置 得出的需要补偿的力部分的代码
+//			CalcMotorForce(&MotorForce.F1,Uart3RxData[2],Uart3RxData[3],Uart3RxData[4]);
+//			CalcMotorForce(&MotorForce.F2,Uart3RxData[5],Uart3RxData[6],Uart3RxData[7]);
+//			CalcMotorForce(&MotorForce.F3,Uart3RxData[8],Uart3RxData[9],Uart3RxData[10]);
+//			//数据排序符合先后次序  且在10ms中断中  不断刷新  保证通讯成功
+//			GriverFDBKCounter = Uart3RxData[11];
+//			Uart3Error &= ~(Error_Uart3RX);
+			//分析指令
+			Cmd = Uart3RxData[1];
+			switch(Cmd)
+			{
+				case RET_POSITION:
+				{
+					retPosition();
+				}
+			}
 			
 		}
 		else {
@@ -322,7 +333,64 @@ void CalcMotorForce(float *fData,unsigned char cData1,unsigned char cData2,unsig
 	//设定取值范围
 	
 }
-void USART2Interrupt(char UartRxBuf)
+
+char retPosition(void)
+{
+	//读取  数据转换  返回
+	char status = 0;
+	float x,y,z;  int Summ,ii; 
+	unsigned char numm1,numm2,numm3;
+	
+	x = var.X0;
+	y = var.Y0;
+	z = var.Z0;
+
+	UartFeedBackData[0] = 0x7B;
+	UartFeedBackData[1]	= 0x31;
+	PositionDataCover(&numm1,&numm2,&numm3,x);
+	UartFeedBackData[2]	= (unsigned char)numm1; 
+	UartFeedBackData[3] = (unsigned char)numm2;
+	UartFeedBackData[4]	= (unsigned char)numm3;		
+	PositionDataCover(&numm1,&numm2,&numm3,y);
+	UartFeedBackData[5] = (unsigned char)numm1;
+	UartFeedBackData[6] = (unsigned char)numm2;
+	UartFeedBackData[7] = (unsigned char)numm3;
+	PositionDataCover(&numm1,&numm2,&numm3,z);
+	UartFeedBackData[8] = (unsigned char)numm1;
+	UartFeedBackData[9] = (unsigned char)numm2;
+	UartFeedBackData[10]= (unsigned char)numm3;
+	UartFeedBackData[11]= (unsigned char)0;
+	UartFeedBackData[12]=  0;
+	UartFeedBackData[13]= 0;
+	Summ = 0;
+	for(ii=1; ii<DataFdbkNum-2;ii++)	{
+		Summ +=UartFeedBackData[ii];
+	}
+	Summ = Summ%100;
+	UartFeedBackData[14] = Summ;
+	UartFeedBackData[15] = 0x7D;
+	
+	HAL_UART_Transmit(&huart3, (uint8_t *)&UartFeedBackData, DataFdbkNum, 0xFFFF);
+	
+	return status;
+}
+
+
+void PositionDataCover(unsigned char *num1,unsigned char *num2,unsigned char *num3,float f)
+{
+	if(f<0)	
+	{
+		f = -f;
+		*num1 = 1;
+	}
+	else	*num1 = 0;
+	
+	*num2 = (unsigned char)f/10.0;
+	*num3 = (unsigned char)((unsigned int)f*10%100);
+}
+
+
+void USART2Interrupt(char UartRxBuf)		//参数  状态控制串口
 {
 static unsigned char i =0;	
 static unsigned int scheck = 0;
@@ -511,32 +579,32 @@ void MotorPWMFdbk(void)
 	unsigned char numm1,numm2,numm3,ii;
 	unsigned int Summ;
 	
-		UartFeedBackData[0] = 0x7B;
-		UartFeedBackData[1]	= 0x20;
-		UartDataConver(&numm1,&numm2,&numm3,TIM1->CCR1);
-		UartFeedBackData[2]	= (unsigned char)numm1; 
-		UartFeedBackData[3] = (unsigned char)numm2;
-		UartFeedBackData[4]	= (unsigned char)numm3;		
-		UartDataConver(&numm1,&numm2,&numm3,TIM1->CCR2);
-		UartFeedBackData[5] = (unsigned char)numm1;
-		UartFeedBackData[6] = (unsigned char)numm2;
-		UartFeedBackData[7] = (unsigned char)numm3;
-		UartDataConver(&numm1,&numm2,&numm3,TIM1->CCR3);
-		UartFeedBackData[8] = (unsigned char)numm1;
-		UartFeedBackData[9] = (unsigned char)numm2;
-		UartFeedBackData[10]= (unsigned char)numm3;
-		UartFeedBackData[11]= (unsigned char)0;
-		UartFeedBackData[12]=  0;
-		UartFeedBackData[13]= 0;
-		Summ = 0;
-		for(ii=1; ii<DataFdbkNum-2;ii++)	{
-			Summ +=UartFeedBackData[ii];
-		}
-		Summ = Summ%100;
-		UartFeedBackData[14] = Summ;
-		UartFeedBackData[15] = 0x7D;
-		
-		HAL_UART_Transmit(&huart2, (uint8_t *)&UartFeedBackData, DataFdbkNum, 0xFFFF);
+	UartFeedBackData[0] = 0x7B;
+	UartFeedBackData[1]	= 0x20;
+	UartDataConver(&numm1,&numm2,&numm3,TIM1->CCR1);
+	UartFeedBackData[2]	= (unsigned char)numm1; 
+	UartFeedBackData[3] = (unsigned char)numm2;
+	UartFeedBackData[4]	= (unsigned char)numm3;		
+	UartDataConver(&numm1,&numm2,&numm3,TIM1->CCR2);
+	UartFeedBackData[5] = (unsigned char)numm1;
+	UartFeedBackData[6] = (unsigned char)numm2;
+	UartFeedBackData[7] = (unsigned char)numm3;
+	UartDataConver(&numm1,&numm2,&numm3,TIM1->CCR3);
+	UartFeedBackData[8] = (unsigned char)numm1;
+	UartFeedBackData[9] = (unsigned char)numm2;
+	UartFeedBackData[10]= (unsigned char)numm3;
+	UartFeedBackData[11]= (unsigned char)0;
+	UartFeedBackData[12]=  0;
+	UartFeedBackData[13]= 0;
+	Summ = 0;
+	for(ii=1; ii<DataFdbkNum-2;ii++)	{
+		Summ +=UartFeedBackData[ii];
+	}
+	Summ = Summ%100;
+	UartFeedBackData[14] = Summ;
+	UartFeedBackData[15] = 0x7D;
+	
+	HAL_UART_Transmit(&huart2, (uint8_t *)&UartFeedBackData, DataFdbkNum, 0xFFFF);
 }
 
 //返回数据   将long型数据转换为协议想要的格式

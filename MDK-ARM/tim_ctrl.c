@@ -335,9 +335,12 @@ void EnCounter2q(signed long int EnCounter1,signed long int EnCounter2,signed lo
 	//根据编码器计数值结合修正参数  转化为杆长
 	*q1 = (double)((float)EnCounter1 / KEn2q + 171.0f + 20.0f);		//171为 在复位位置  L杆原长   20为球铰杆长度
 	
-	*q2 = (double)((float)EnCounter2 / KEn2q +86.0f + 20.0f);
+//	*q2 = (double)((float)EnCounter2 / KEn2q +86.0f + 20.0f);
+//	
+//	*q3 = (double)((float)EnCounter3 / KEn2q + 150.0f +20.0f);
+	*q2 = (double)((float)EnCounter2 / KEn2q +70.0f + 20.0f);
 	
-	*q3 = (double)((float)EnCounter3 / KEn2q + 150.0f +20.0f);
+	*q3 = (double)((float)EnCounter3 / KEn2q + 130.0f +20.0f);
 }
 
 /**************************************编码器计数****************************************/

@@ -21,11 +21,18 @@ Encoder_counter	= CmdData1*255+CmdData2     CmdData1 的最高位  表示符号 
 { Type	Data1 Data2  Data3 Data4 Data5 Data6 Data7 Data8 Data9  Free1  Free2  Free3 Check }
 
 Type  回读指令类型  用于自动回读
-0.编码器回读  FLASH回读  电机PWM回读   按键状态回读  当前模式（是否补偿、什么补偿）回读  	当前重力补偿电机力 
-Type 0x20		0x30		0x40																 0x60			
-编码器回读	
-EncoderCounter = Data1*65536+Data2*256+Data3   Data1 最高位表示数值正负  1负  0正	
+编码器回读		Type = 0x20	
+EncoderCounter = Data1*65536+Data2*256+Data3   Data1 最高位表示数值正负  1负  0正
+位置回读		Type = 0x21  (x  y  z)
+x = Data1 + Data2 * 0.01  单位cm  y = Data3 + Data4 * 0.01  z = Data5 + Data6 * 0.01
+
 电机PWM回读
+FLASH回读		Type = 0x30
+按键状态回读  
+当前模式（是否补偿、什么补偿）回读  	
+当前重力补偿电机力    0x60
+
+
 
 
 4.控制模式 
@@ -56,13 +63,15 @@ Cmddata1 	FLASH  顺序    Value = 256*CmdData2 + CmdData3
 /**********************************************电脑端结构解算部分协议*******************************/
 发送协议  14字节   下位机—>电脑
 {  ID  Cmd  CmdData1  CmaData2  CmdData3   CmdData4  CmdData5  CmdData6  Error  Free Sort Check  }
-Cmd = 0x10
-q1 = CmdData1*10 + CmdData2/10;
+位置回读	Cmd = 0x31	  (x  y  z)
+返回格式：
+x = Data1 + Data2 * 0.01  单位cm  y = Data3 + Data4 * 0.01  z = Data5 + Data6 * 0.01
 
 
-接收协议  电脑->下位机  返回各杆的推力  分正负  15字节
 
-{  ID  Cmd  Data1_1  Data1_2  Data1_3  Data2_1  Data2_2  Data2_3  Data3_1  Data3_2  Data3_3  Sort Check  }
+接收协议  电脑->下位机    16字节
+
+{  ID  Cmd  Data1_1  Data1_2  Data1_3  Data2_1  Data2_2  Data2_3  Data3_1  Data3_2  Data3_3  free Sort Check  }
 F1 = Data_3/10 + Data_2*10 +Data_1*1000;     Data_1最高位  为 符号位  1为负数   0为正数
 Cmd = 0x11
 

@@ -89,6 +89,7 @@ extern force_t F1,F2,F3;
 extern MotorGriverForce_t MotorForce;
 extern char CalcOverFlag;
 
+
 uint32_t FLASH_Address = 0, PageError = 0;
 __IO uint32_t data32 = 0 , MemoryProgramStatus = 0;
 
@@ -214,7 +215,7 @@ int main(void)
 		STMFLASH_Write(FLASH_USER_START_ADDR,(u32*)FLASH_Init,FLASHSIZE);
 	}
 
-
+	
 	HAL_TIM_Base_Start_IT(&htim14); //最后开启250us中断处理
 	HAL_TIM_Base_Start_IT(&htim16); //开启10ms的 重力补偿中断
 	
@@ -404,7 +405,7 @@ void KinematicTest()
 {
 	HAL_GPIO_WritePin(LD2_GPIO_Port,LD2_Pin,GPIO_PIN_SET);
 
-	varq.q1 = 271;  varq.q2 = 251; varq.q3 = 281;
+	varq.q1 = 261;  varq.q2 = 261; varq.q3 = 261;
 	ForwardKinematic();
 	CPointSolve(var);
 	FbSolve();

@@ -96,6 +96,9 @@ extern UART_HandleTypeDef huart3;
 #define 	CTL_EncoderFDBK		0x20
 #define 	CTL_GriverForceFDBK	0x60
 
+//数据交换部分  宏定义
+#define RET_POSITION  0x31		//返回当前位置
+
 
 /*************************const define******************************/
 #define 	DataFdbkNum		(16)	//返回的 协议长度
@@ -122,6 +125,9 @@ void DataCoverInt2Char(unsigned char *pNum1,unsigned char *pNum2,int pNum_Int);
 void FlashFDBK(char part);
 void FlashInit(void);
 void CalcMotorForce(float *fData,unsigned char cData1,unsigned char cData2,unsigned char cData3);
+
+void PositionDataCover(unsigned char *num1,unsigned char *num2,unsigned char *num3,float f);
+char retPosition(void);
 
 
 void SwDynFri(unsigned char state);
