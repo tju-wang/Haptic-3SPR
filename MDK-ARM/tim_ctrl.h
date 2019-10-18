@@ -54,6 +54,7 @@ typedef struct Ctrl{	//控制变量结构体
 	char InerFlag;
 	
 	float pullpush;
+	int sensorData;
 	
 }Ctrl_t;
 typedef struct MotorGriverForce{

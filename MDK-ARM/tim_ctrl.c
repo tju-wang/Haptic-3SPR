@@ -25,7 +25,7 @@ extern var_q varq;
 //Time Interrupt
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)	
 {
-	static unsigned char Uart3Sort;
+	//static unsigned char Uart3Sort;
 	static unsigned int Uart3ErrCounter;
 	if(htim->Instance == htim3.Instance)	{	//TIM3 EncoderFlow
 		EncoderFlow(&M1,htim3);

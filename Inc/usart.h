@@ -4,35 +4,15 @@
   * Description        : This file provides code for the configuration
   *                      of the USART instances.
   ******************************************************************************
-  ** This notice applies to any and all portions of this file
-  * that are not between comment pairs USER CODE BEGIN and
-  * USER CODE END. Other portions of this file, whether 
-  * inserted by the user or by software development tools
-  * are owned by their respective copyright owners.
+  * @attention
   *
-  * COPYRIGHT(c) 2019 STMicroelectronics
+  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * All rights reserved.</center></h2>
   *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
   */
@@ -54,6 +34,7 @@
 
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
+extern UART_HandleTypeDef huart6;
 
 /* USER CODE BEGIN Private defines */
 
@@ -81,6 +62,7 @@ extern UART_HandleTypeDef huart3;
 #define		CTL_SINGMOTOR	0x13	//单个电机补偿 single
 
 #define		CMD_FLASH		0x50	//FLASH相关
+#define		CMD_SENSOR		0x60	//传感器相关指令
 
 #define		CTL_FLASHFDBK		0x10	//FLASH回读
 #define		CTL_FLASHCHANGE		0x11
@@ -98,7 +80,7 @@ extern UART_HandleTypeDef huart3;
 
 //数据交换部分  宏定义
 #define RET_POSITION  0x31		//返回当前位置
-
+#define	RxSize	10				//传感器向主控传递数据  长度10字节
 
 /*************************const define******************************/
 #define 	DataFdbkNum		(16)	//返回的 协议长度
@@ -112,10 +94,12 @@ extern UART_HandleTypeDef huart3;
 
 void MX_USART2_UART_Init(void);
 void MX_USART3_UART_Init(void);
+void MX_USART6_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 void USART2Interrupt(char UartRxBuf);
 void USART3Interrupt(char UartRxBuf);
+void USART6Interrupt(unsigned char *UartRxBuf);
 void EncoderFdbk(void);
 void MotorPWMFdbk(void);
 void UartDataConver(unsigned char *pNum1,unsigned char *pNum2,unsigned char *pNum3,long int Data);
@@ -128,7 +112,7 @@ void CalcMotorForce(float *fData,unsigned char cData1,unsigned char cData2,unsig
 
 void PositionDataCover(unsigned char *num1,unsigned char *num2,unsigned char *num3,float f);
 char retPosition(void);
-
+char SensorCtrl(unsigned char cmd,unsigned char cmddata);
 
 void SwDynFri(unsigned char state);
 void SwStaFri(unsigned char state);

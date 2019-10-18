@@ -52,11 +52,18 @@ InerFlag			0x14	//惯性力补偿
 Cmd  	0x50	修改FLASH
 Cmddata1 	FLASH  顺序    Value = 256*CmdData2 + CmdData3
 		0x10	FLASH回读
-
+		**0x12	回读全部flash
 		0x11	修改FLASH
 		0x13	FLASH重置
 
 		0x14	修改FLASH  Init的内容
+
+6.传感器相关指令	Cmd		0x60
+CmdData1	0x10		不需要返回到上位机端
+CmdData1	0x20		需要将结果返回上位机
+	CmdData2	等价于传感器查询协议  Cmd	详见传感器log
+	Cmddata3	等价于传感器协议      Cmddata1
+
 
 
 		

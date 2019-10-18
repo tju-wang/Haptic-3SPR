@@ -68,7 +68,7 @@
 
 /* USER CODE BEGIN PV */
 Moter_t M1,M2,M3;
-Ctrl_t	Ctrl,CtrlM1,CtrlM2,CtrlM3;
+Ctrl_t	Ctrl,CtrlM1,CtrlM2,CtrlM3;	//Ctrl 控制的总结构体  CtrlM1..M3  电机控制结构体
 
 unsigned int gErrorStatus;	//全局变量   用来显示错误提示
 double Val_1,Val_2;
@@ -76,6 +76,7 @@ double Val_1,Val_2;
 
 extern uint8_t RXBuffer[1];
 extern uint8_t RXBuffer_3[1];
+extern uint8_t RXBuffer_6[RxSize];
 
 extern int Data1[],Data2[];
 extern char FlagRecord,FlagPrint,FlagDebug;
@@ -157,6 +158,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
 	
   /* USER CODE END 1 */
+  
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -183,11 +185,13 @@ int main(void)
   MX_TIM4_Init();
   MX_TIM5_Init();
   MX_USART3_UART_Init();
-  
   MX_TIM16_Init();
+  MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
   	HAL_UART_Receive_IT(&huart2, (uint8_t *)RXBuffer, 1); //打开中断接收
 	HAL_UART_Receive_IT(&huart3, (uint8_t *)RXBuffer_3, 1); //打开中断接收
+	HAL_UART_Receive_IT(&huart6, (uint8_t *)RXBuffer_6, 1); //打开中断接收
+	//HAL_UART_Receive_DMA(&huart6, (uint8_t *)&RXBuffer_6, RxSize);// 打开DMA接收数据
 	
 	HAL_TIM_Base_Start_IT(&htim3);
 	HAL_TIM_Base_Start_IT(&htim4);
@@ -215,7 +219,8 @@ int main(void)
 		STMFLASH_Write(FLASH_USER_START_ADDR,(u32*)FLASH_Init,FLASHSIZE);
 	}
 
-	
+	HAL_Delay(20);
+		
 	HAL_TIM_Base_Start_IT(&htim14); //最后开启250us中断处理
 	HAL_TIM_Base_Start_IT(&htim16); //开启10ms的 重力补偿中断
 	
@@ -297,18 +302,15 @@ void SystemClock_Config(void)
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
   RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
 
-  /**Supply configuration update enable 
+  /** Supply configuration update enable 
   */
-  MODIFY_REG(PWR->CR3, PWR_CR3_SCUEN, 0);
-  /**Configure the main internal regulator output voltage 
+  HAL_PWREx_ConfigSupply(PWR_LDO_SUPPLY);
+  /** Configure the main internal regulator output voltage 
   */
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
-  while ((PWR->D3CR & (PWR_D3CR_VOSRDY)) != PWR_D3CR_VOSRDY) 
-  {
-    
-  }
-  /**Initializes the CPU, AHB and APB busses clocks 
+  while(!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {}
+  /** Initializes the CPU, AHB and APB busses clocks 
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_DIV1;
@@ -327,7 +329,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  /**Initializes the CPU, AHB and APB busses clocks 
+  /** Initializes the CPU, AHB and APB busses clocks 
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2
@@ -344,8 +346,10 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USART3|RCC_PERIPHCLK_USART2;
+  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USART3|RCC_PERIPHCLK_USART2
+                              |RCC_PERIPHCLK_USART6;
   PeriphClkInitStruct.Usart234578ClockSelection = RCC_USART234578CLKSOURCE_D2PCLK1;
+  PeriphClkInitStruct.Usart16ClockSelection = RCC_USART16CLKSOURCE_D2PCLK2;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
   {
     Error_Handler();

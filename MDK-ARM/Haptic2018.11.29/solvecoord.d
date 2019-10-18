@@ -3,10 +3,12 @@
 .\haptic2018.11.29\solvecoord.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\haptic2018.11.29\solvecoord.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 .\haptic2018.11.29\solvecoord.o: ..\Kinematic\kinematic.h
-.\haptic2018.11.29\solvecoord.o: C:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\DSP\Include\arm_math.h
-.\haptic2018.11.29\solvecoord.o: C:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_compiler.h
+.\haptic2018.11.29\solvecoord.o: C:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include\arm_math.h
+.\haptic2018.11.29\solvecoord.o: C:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include\core_cm7.h
 .\haptic2018.11.29\solvecoord.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
-.\haptic2018.11.29\solvecoord.o: C:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_armcc.h
+.\haptic2018.11.29\solvecoord.o: C:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include\cmsis_version.h
+.\haptic2018.11.29\solvecoord.o: C:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include\cmsis_compiler.h
+.\haptic2018.11.29\solvecoord.o: C:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include\cmsis_armcc.h
 .\haptic2018.11.29\solvecoord.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\haptic2018.11.29\solvecoord.o: ..\Kinematic\matrixlib.h
 .\haptic2018.11.29\solvecoord.o: ..\Kinematic\matrixadvlib.h
